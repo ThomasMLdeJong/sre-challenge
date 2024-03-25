@@ -1,36 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storage-db
+  name: postgresql
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: storage-db
+      app: postgresql
   template:
     metadata:
       labels:
-        app: storage-db
+        app: postgresql
     spec:
       containers:
-      - name: storage-db
-        image: postgres:15.5-alpine
-        env: 
-        - name: PGUSER
-          value: E-Corp
-        - name: POSTGRES_DB 
-          value: E-Corp
+      - name: postgresql
+        image: postgres:latest
+        env:
+        - name: POSTGRES_DB
+          value: user_authentication
         - name: POSTGRES_USER
-          value: E-Corp
-        - name: POSTGRES_PASSWORD 
-          value: Password123
---- 
+          value: user_authentication
+        - name: POSTGRES_PASSWORD
+          value: password123
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: database-struct
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: database-struct
+        configMap:
+          name: database
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: e-corp-db
+  name: postgresql
 spec:
   selector:
-    app: e-corp-db
+    app: postgresql
   ports:
-  - port: 5432
+  - name: database
+    protocol: TCP
+    port: 5432
     targetPort: 5432
