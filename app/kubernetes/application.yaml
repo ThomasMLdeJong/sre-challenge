@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application
+spec:
+  selector:
+    matchLabels:
+      app: application
+  template:
+    metadata:
+      labels:
+        app: application
+    spec:
+      imagePullSecrets: 
+      - name: regcred
+      containers:
+      - name: sre-challenge
+        image: thomasmldejong/sre-challenge:sre-challenge
+        imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: application
+spec:
+  selector:
+    app: application
+  ports:
+  - name: http
+    protocol: TCP
+    port: 5000
+    targetPort: 5000
