@@ -8,6 +8,7 @@
         <p class="lead my-3">E-Corp is the largest multinational conglomerate in the world.</p>
         {% if not is_authenticated %}
         <p class="lead mb-0"><a href="{{ url_for('login') }}" class="text-white fw-bold">Login →</a></p>
+        <p class="lead mb-0"><a href="{{ url_for('register_user') }}" class="text-white fw-bold">Register →</a></p>
         {% endif %}
       </div>
     </div>
