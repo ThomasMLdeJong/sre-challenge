@@ -2,10 +2,11 @@ import os
 import logging
 import bcrypt
 import psycopg2
-from flask import Flask, session, redirect, url_for, request, render_template
+from flask import Flask, session, redirect, url_for, request, render_template, flash
+from kubernetes import client, config
+import base64
 
 app = Flask(__name__)
-app.secret_key = b"192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
 app.logger.setLevel(logging.INFO)
 
 def is_authenticated():
@@ -13,6 +14,23 @@ def is_authenticated():
     Controleer of de user geautenticeerd is.
     """
     return "username" in session
+
+
+def get_secret(namespace, secret_name): 
+    config.load_incluster_config()
+    v1 = client.CoreV1Api()
+
+    try: 
+        secret = v1.read_namespaced_secret(name=secret_name, namespace=namespace)
+
+        secret_data = {}
+        for key, value in secret.data.items():
+            secret_data[key] = base64.b64decode(value).decode('utf-8')
+
+        return secret_data
+    except Exception as e: 
+        print(f"Error fetching secret: {e}")
+        return None
 
 def get_database_credentials():
     """
@@ -48,10 +66,10 @@ def authenticate(username, password):
                 return True
             else:
                 app.logger.warning(f"Invalid password for user '{username}'")
-                raise ValueError("Invalid username or password")
+                return False
         else:
             app.logger.warning(f"User '{username}' not found")
-            raise ValueError("Invalid username or password")
+            return False
     finally:
         cursor.close()
         connection.close()
@@ -88,7 +106,7 @@ def login():
         if authenticate(username, password):
             return redirect(url_for("index"))
         else:
-            return render_template("login.html", error="Invalid username or password")
+            flash("Invalid username or password", "error")
     return render_template("login.html")
 
 @app.route("/logout")
@@ -108,4 +126,11 @@ def register_user():
     return render_template("register.html")
 
 if __name__ == "__main__":
+    namespace = "default"
+    secret_name = "secret-key-flask"
+    app.secret_key = get_secret(namespace, secret_name)
+    if app.secret_key: 
+        print("Secret fetched successfully")
+    else:
+        print("Failed to fetch secret.")
     app.run(host="0.0.0.0", port=5000)
