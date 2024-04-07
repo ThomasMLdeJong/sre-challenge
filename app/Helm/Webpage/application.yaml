@@ -11,12 +11,10 @@ spec:
       labels:
         app: application
     spec:
-      imagePullSecrets: 
-      - name: regcred
       containers:
       - name: sre-challenge
-        image: thomasmldejong/sre-challenge:sre-challenge
-        imagePullPolicy: Always
+        image: webapp
+        imagePullPolicy: IfNotPresent
         env:
         - name: DB_HOST 
           value: postgresql
@@ -28,6 +26,8 @@ spec:
           value: user_authentication
         - name: DB_PASSWORD 
           value: password123
+        ports:
+        - containerPort: 5000
 ---
 apiVersion: v1
 kind: Service
@@ -40,4 +40,4 @@ spec:
   - name: http
     protocol: TCP
     port: 5000
-    targetPort: 5000
+    targetPort: 5000 
