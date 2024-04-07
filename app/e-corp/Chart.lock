@@ -1,0 +1,12 @@
+dependencies:
+- name: Webpage
+  repository: file://./charts/Webpage/
+  version: 1.0.0
+- name: Database
+  repository: file://./charts/Database/
+  version: 1.0.0
+- name: ingress
+  repository: file://./charts/Ingress/
+  version: 1.0.0
+digest: sha256:212d6e8a9f93217b303c5149f3a10da8de3864c55df0a15ca14a55b13ab6d0d5
+generated: "2024-04-07T17:15:16.558393646+02:00"
