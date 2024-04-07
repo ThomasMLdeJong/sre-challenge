@@ -1,0 +1,5 @@
+DB_HOST: postgresql
+DB_PORT: 5432
+DB_NAME: user_authentication
+DB_USER: user_authentication 
+DB_PASSWORD: password123

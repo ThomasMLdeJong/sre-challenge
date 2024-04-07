@@ -17,15 +17,15 @@ spec:
         imagePullPolicy: IfNotPresent
         env:
         - name: DB_HOST 
-          value: postgresql
+          value: {{ .Values.DB_HOST }}
         - name: DB_PORT
-          value: '5432' 
+          value: {{ quote .Values.DB_PORT }}
         - name: DB_NAME
-          value: user_authentication
+          value: {{ .Values.DB_NAME }}
         - name: DB_USER
-          value: user_authentication
+          value: {{ .Values.DB_USER }}
         - name: DB_PASSWORD 
-          value: password123
+          value: {{ .Values.DB_PASSWORD }}
         ports:
         - containerPort: 5000
 ---

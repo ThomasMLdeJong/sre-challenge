@@ -17,11 +17,11 @@ spec:
         image: postgres:latest
         env:
         - name: POSTGRES_DB
-          value: user_authentication
+          value: {{ .Values.POSTGERS_DB }}
         - name: POSTGRES_USER
-          value: user_authentication
+          value: {{ .Values.POSTGRES_USER }}
         - name: POSTGRES_PASSWORD
-          value: password123
+          value: {{ .Values.POSTGRES_PASSWORD }}
         ports:
         - containerPort: 5432
         volumeMounts:

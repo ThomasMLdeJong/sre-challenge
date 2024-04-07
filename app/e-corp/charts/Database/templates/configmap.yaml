@@ -11,8 +11,3 @@ data:
         username VARCHAR(100) UNIQUE NOT NULL,
         hashed_password VARCHAR(255) NOT NULL
     );
-
-    -- Insert initial user if not exists
-    INSERT INTO users (username, hashed_password)
-    VALUES ('admin', '$2b$12$WVWybsj2FN2kKyF4b5kMVuaC5uXzstAt63dW9pJDQPPvSQy6QFJJK')
-    ON CONFLICT DO NOTHING;
